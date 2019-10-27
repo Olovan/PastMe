@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:past_me/locator.dart';
 import 'package:past_me/pages/note-edit-page.dart';
 
+import 'models/note.dart';
 import 'pages/note-list-page.dart';
-
 
 main() {
   setupLocator();
@@ -18,10 +18,17 @@ class App extends StatelessWidget {
       title: 'Past Me',
       color: Colors.red,
       home: NoteListPage(),
+      theme: buildTheme(),
       routes: {
         '/home': (BuildContext context) => NoteListPage(),
-        '/new': (BuildContext context) => NoteEditPage(),
+        '/new': (BuildContext context) => NoteEditPage(Note()),
       },
+    );
+  }
+
+  ThemeData buildTheme() {
+    return new ThemeData(
+      backgroundColor: Color(0xFFDDDDDD),
     );
   }
 }

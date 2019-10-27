@@ -1,26 +1,26 @@
 import 'dart:convert';
 
-class ActionItem {
+class NoteActionItem {
     int id;
     int parent;
     bool done;
     String description;
 
-    ActionItem({
+    NoteActionItem({
         this.id,
         this.parent,
         this.done,
         this.description,
     });
 
-    factory ActionItem.fromJson(String str) => ActionItem.fromMap(json.decode(str));
+    factory NoteActionItem.fromJson(String str) => NoteActionItem.fromMap(json.decode(str));
 
     String toJson() => json.encode(toMap());
 
-    factory ActionItem.fromMap(Map<String, dynamic> json) => ActionItem(
+    factory NoteActionItem.fromMap(Map<String, dynamic> json) => NoteActionItem(
         id: json["id"],
         parent: json["parent"],
-        done: json["done"],
+        done: json["done"] == 1,
         description: json["description"],
     );
 

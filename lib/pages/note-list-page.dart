@@ -4,33 +4,31 @@ import 'package:past_me/locator.dart';
 import 'package:past_me/models/note.dart';
 import 'package:past_me/pages/note-details-page.dart';
 import 'package:past_me/services/base_service.dart';
-import 'package:past_me/services/note-service.dart';
+import 'package:past_me/services/note_service.dart';
 import 'package:provider/provider.dart';
 
 import '../components/preview-card.dart';
 import 'note-edit-page.dart';
 
-class NoteListPage extends StatefulWidget {
-  @override
-  _NoteListPageState createState() => _NoteListPageState();
-}
+class NoteListPage extends StatelessWidget {
 
-class _NoteListPageState extends State<NoteListPage> {
-  NoteService model = locator<NoteService>();
+  final NoteService model = locator<NoteService>();
 
   @override
   Widget build(BuildContext context) {
+    model.loadNotes();
+
     return ChangeNotifierProvider<NoteService>(
       builder: (_) => model,
       child: Scaffold(
-        backgroundColor: Colors.white70,
+        backgroundColor: Theme.of(context).backgroundColor,
         body: Consumer<NoteService>(
           builder: (context, notesModel, child) =>
               notesModel.state == ViewState.Busy
                   ? Center(child: CircularProgressIndicator())
                   : ListView(
                       scrollDirection: Axis.vertical,
-                      children: getCards(notesModel.notes)),
+                      children: getCards(context, notesModel.notes)),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () => Navigator.of(context).pushNamed('/new'),
@@ -40,38 +38,31 @@ class _NoteListPageState extends State<NoteListPage> {
     );
   }
 
-  @override
-  initState() {
-    model.loadNotes();
-    super.initState();
-  }
-
-  List<Widget> getCards(List<Note> entries) {
+  List<Widget> getCards(BuildContext context, List<Note> entries) {
     return entries
         .map<PreviewCard>((e) => PreviewCard(
-              title: e.title,
-              body: e.body,
-              tapAction: () => viewNoteDetails(e),
+              note: e,
+              tapAction: () => editNote(context, e),
             ))
         .toList();
   }
 
-  void viewNoteDetails(note) {
+  void viewNoteDetails(BuildContext context, Note note) {
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => NoteDetailsPage(
                   note: note,
-                  editAction: () => editNote(note),
+                  editAction: () => editNote(context, note),
                   deleteAction: () => deleteNote(note),
                 )));
   }
 
-  void deleteNote(note) {
+  void deleteNote(Note note) {
     model.removeNote(note);
   }
 
-  void editNote(note) {
+  void editNote(BuildContext context, Note note) {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => NoteEditPage(note)));
   }

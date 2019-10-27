@@ -15,13 +15,12 @@ class NoteDetailsPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Details'),
       ),
-      backgroundColor: Colors.grey,
+      backgroundColor: Theme.of(context).backgroundColor,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(height: 10),
-            buildTitleBar(context),
             buildBody(context),
             Container(height: 20),
             buildBottomButtons(context),
@@ -29,23 +28,6 @@ class NoteDetailsPage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Widget buildTitleBar(context) {
-    return Container(
-        padding: EdgeInsets.all(10),
-        margin: EdgeInsets.all(5),
-        color: Colors.white,
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              child: Text(
-                note.title,
-                style: Theme.of(context).textTheme.headline,
-              ),
-            ),
-          ],
-        ));
   }
 
   Widget buildBody(context) {
