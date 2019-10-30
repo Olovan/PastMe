@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:past_me/locator.dart';
 import 'package:past_me/models/note.dart';
-import 'package:past_me/pages/note-details-page.dart';
 import 'package:past_me/services/base_service.dart';
 import 'package:past_me/services/note_service.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +20,6 @@ class NoteListPage extends StatelessWidget {
     return ChangeNotifierProvider<NoteService>(
       builder: (_) => model,
       child: Scaffold(
-        backgroundColor: Theme.of(context).backgroundColor,
         body: Consumer<NoteService>(
           builder: (context, notesModel, child) =>
               notesModel.state == ViewState.Busy
@@ -45,17 +43,6 @@ class NoteListPage extends StatelessWidget {
               tapAction: () => editNote(context, e),
             ))
         .toList();
-  }
-
-  void viewNoteDetails(BuildContext context, Note note) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => NoteDetailsPage(
-                  note: note,
-                  editAction: () => editNote(context, note),
-                  deleteAction: () => deleteNote(note),
-                )));
   }
 
   void deleteNote(Note note) {

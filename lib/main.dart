@@ -14,11 +14,11 @@ main() {
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = buildTheme();
     return MaterialApp(
       title: 'Past Me',
-      color: Colors.red,
       home: NoteListPage(),
-      theme: buildTheme(),
+      theme: theme,
       routes: {
         '/home': (BuildContext context) => NoteListPage(),
         '/new': (BuildContext context) => NoteEditPage(Note()),
@@ -27,8 +27,21 @@ class App extends StatelessWidget {
   }
 
   ThemeData buildTheme() {
-    return new ThemeData(
-      backgroundColor: Color(0xFFDDDDDD),
+    ThemeData base = ThemeData.light();
+    return base.copyWith(
+      backgroundColor: Color(0xFFF9F9F9),
+      primaryColor: Color(0xFFFAFAFA),
+      primaryColorLight: Color(0xFFFFFFFF),
+      primaryColorDark: Color(0xC7C7C7C7),
+      accentColor: Color(0xFFC2185B),
+      colorScheme: base.colorScheme.copyWith(
+        primary: Color(0xFFFAFAFA),
+        primaryVariant: Color(0xFFFFFFFF),
+        onPrimary: Color(0xFF000000),
+        secondary: Color(0xFFC2185B),
+        secondaryVariant: Color(0xFF8C0032),
+        onSecondary: Color(0xFFFFFFFF)
+      )
     );
   }
 }

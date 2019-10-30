@@ -28,8 +28,6 @@ class _NoteEditPageState extends State<NoteEditPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        //appBar: AppBar(title: Text('Author Note')),
-        backgroundColor: Theme.of(context).backgroundColor,
         floatingActionButton: buildSaveButton(),
         body: SafeArea(
           child: Form(
@@ -65,12 +63,13 @@ class _NoteEditPageState extends State<NoteEditPage> {
   }
 
   Widget buildBackButton() {
+    var theme = Theme.of(context);
     return RaisedButton(
       child: Padding(
         padding: const EdgeInsets.all(15.0),
-        child: Icon(Icons.arrow_back, color: Colors.white),
+        child: Icon(Icons.arrow_back, color: theme.colorScheme.onSecondary),
       ),
-      color: Colors.blue,
+      color: theme.colorScheme.secondary,
       shape: CircleBorder(),
       onPressed: () {
         Navigator.of(context).pop();
@@ -79,14 +78,15 @@ class _NoteEditPageState extends State<NoteEditPage> {
   }
 
   Widget buildDeleteButton() {
+    var theme = Theme.of(context);
     return note.id == null
         ? Container()
         : RaisedButton(
             child: Padding(
               padding: const EdgeInsets.all(15.0),
-              child: Icon(Icons.delete, color: Colors.white),
+              child: Icon(Icons.delete, color: theme.colorScheme.onSecondary),
             ),
-            color: Colors.red,
+            color: theme.colorScheme.secondary,
             shape: CircleBorder(),
             onPressed: () {
               locator<NoteService>().removeNote(note);
@@ -96,11 +96,22 @@ class _NoteEditPageState extends State<NoteEditPage> {
   }
 
   Widget buildBodyField() {
+    var theme = Theme.of(context);
     return Container(
-      color: Colors.white,
+      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      decoration: BoxDecoration(
+          color: theme.colorScheme.primary,
+          borderRadius: BorderRadius.circular(10)),
       child: TextFormField(
           validator: notNullOrEmptyValidator,
-          decoration: InputDecoration(hintText: "Body"),
+          decoration: InputDecoration(
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: theme.colorScheme.secondary)),
+              hintText: "Body",
+              contentPadding: EdgeInsets.all(10)),
           initialValue: note.body,
           onChanged: (text) => note.body = text,
           keyboardType: TextInputType.multiline,
@@ -113,69 +124,99 @@ class _NoteEditPageState extends State<NoteEditPage> {
   }
 
   Widget buildActionItemInput() {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      children: <Widget>[
-        Expanded(
-            child: TextFormField(
+    var theme = Theme.of(context);
+    return Container(
+        margin: EdgeInsets.only(left: 10, right: 10),
+        child: TextFormField(
           controller: _actionItemInputController,
           decoration: InputDecoration(
-              hintText: "Add action item",
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-              fillColor: Colors.white,
-              filled: true,
-              suffixIcon: GestureDetector(
-                child: Icon(Icons.add_circle),
-                onTap: () {
-                  note.actionItems = note.actionItems ?? [];
-                  if (newActionItem.isNotEmpty) {
-                    note.actionItems.add(NoteActionItem(
-                        description: newActionItem,
-                        parent: note.id,
-                        done: false));
-                    _actionItemInputController.clear();
-                  }
-                  setState(() => {});
-                },
-              )),
+            hintText: "Add action item",
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(color: theme.colorScheme.secondary)),
+            fillColor: theme.colorScheme.primary,
+            filled: true,
+            suffixIcon: addNewActionItemButton(),
+          ),
           onChanged: (value) => newActionItem = value,
-        )),
-      ],
-    );
+          onFieldSubmitted: (value) => addActionItem(),
+        ));
+  }
+
+  Widget addNewActionItemButton() {
+    var theme = Theme.of(context);
+    return GestureDetector(
+        child: Icon(
+          Icons.add_circle,
+          color: theme.colorScheme.secondary,
+        ),
+        onTap: addActionItem);
+  }
+
+  void addActionItem() {
+    note.actionItems = note.actionItems ?? [];
+    if (newActionItem.isNotEmpty) {
+      note.actionItems.add(NoteActionItem(
+          description: newActionItem, parent: note.id, done: false));
+      _actionItemInputController.clear();
+    }
+    setState(() {
+      this.note = note;
+    });
   }
 
   Widget buildActionItems() {
     return Expanded(
-      child: ListView.builder(
-          itemCount: note?.actionItems?.length ?? 0,
-          itemBuilder: (context, index) {
-            return Container(
-              child: Dismissible(
-                background: Container(
-                  color: Colors.green,
-                  child: Icon(Icons.check),
-                  alignment: Alignment.centerLeft,
+        child: ListView.builder(
+      itemCount: note?.actionItems?.length ?? 0,
+      itemBuilder: buildActionItemTile,
+    ));
+  }
+
+  Widget buildActionItemTile(context, i) {
+    var theme = Theme.of(context);
+    var actionItem = note.actionItems[i];
+    return Container(
+      child: Dismissible(
+        background: Container(
+          color: Colors.green,
+          child: Icon(Icons.check),
+          alignment: Alignment.centerLeft,
+        ),
+        secondaryBackground: Container(
+          color: Colors.red,
+          child: Icon(Icons.delete_sweep),
+          alignment: Alignment.centerRight,
+        ),
+        child: Container(
+          color: theme.colorScheme.primary,
+          child: GestureDetector(
+            onTap: () {
+              actionItem.done = !actionItem.done;
+              setState(() { });
+            },
+            child: ListTile(
+                leading: Checkbox(
+                  value: actionItem.done,
+                  onChanged: (bool value) {
+                    note.actionItems[i].done = value;
+                    setState(() {});
+                  },
                 ),
-                secondaryBackground: Container(
-                  color: Colors.red,
-                  child: Icon(Icons.delete_sweep),
-                  alignment: Alignment.centerRight,
-                ),
-                child: Container(
-                  color: Colors.white,
-                  child: ListTile(
-                      title: Text(
-                          "${index + 1}. ${note.actionItems[index].description}")),
-                ),
-                key: Key(UniqueKey().toString()),
-                onDismissed: (direction) {
-                  note.actionItems.removeAt(index);
-                  setState(() {});
-                },
-              ),
-            );
-          }),
+                title: Text("${note.actionItems[i].description}")),
+          ),
+        ),
+        key: Key(UniqueKey().toString()),
+        onDismissed: (direction) {
+          if (direction == DismissDirection.startToEnd) {
+            note.actionItems[i].done = true;
+          } else {
+            note.actionItems.removeAt(i);
+          }
+          setState(() {});
+        },
+      ),
     );
   }
 
