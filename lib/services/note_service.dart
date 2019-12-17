@@ -1,66 +1,54 @@
-import 'package:past_me/models/action_item.dart';
+import 'dart:async';
+
+import 'package:past_me/locator.dart';
+import 'package:past_me/Events/note_event.dart';
 import 'package:past_me/models/note.dart';
-import 'package:past_me/services/action_item_service.dart';
-import 'package:past_me/services/base_service.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:past_me/services/note_repository.dart';
 
-import '../locator.dart';
-import 'db_provider.dart';
+class NoteService {
+  Sink<List<Note>> get _noteSink => _controller.sink;
 
-class NoteService extends BaseService {
-  DBProvider dbProvider = locator<DBProvider>();
-  ActionItemService actionItemService = locator<ActionItemService>();
-  
-  List<Note> notes = List<Note>();
+  NoteRepository _repo = locator<NoteRepository>();
+  var _controller = new StreamController<List<Note>>();
+  List<Note> notes = [];
+  Stream<List<Note>> get stream => _controller.stream;
 
-  void loadNotes() async {
-    setState(ViewState.Busy);
-    Database db = await dbProvider.db;
-    var dbNoteData = await db.query("Note");
-    notes = dbNoteData.map((l) => Note.fromMap(l)).toList();
-    await Future.forEach(notes, (note) async {
-      note.actionItems = await actionItemService.getActionItems(note);
-    });
-    setState(ViewState.Idle);
-  }
-
-  addNote(Note note) async {
-    setState(ViewState.Busy);
-    Database db = await dbProvider.db;
-    Note existingNote =
-        notes.firstWhere((n) => n.id == note.id, orElse: () => null);
-    if (existingNote != null) {
-      await db.update("Note", note.toMap(), where: 'id = ?', whereArgs: [note.id]);
+  processEvent(NoteEvent event) async {
+    if (event is NoteCreatedEvent) {
+      createNote(event.note);
+    } else if (event is NoteDeletedEvent) {
+      deleteNote(event.note);
+    } else if (event is NoteUpdatedEvent) {
+      updateNote(event.note);
     } else {
-      int id = await db.insert("Note", note.toMap());
-      note.id = id;
+      await reloadNotes();
     }
-    await storeActionItems(note);
-    setState(ViewState.Idle);
-    loadNotes();
   }
 
-  void storeActionItems(Note note) async {
-    setState(ViewState.Busy);
-    List<NoteActionItem> existingItems = await actionItemService.getActionItems(note);
-    List<NoteActionItem> deletedItems = existingItems
-      .where((item) => note.actionItems.indexWhere((e) => e.id == item.id) == -1)
-      .toList();
-    deletedItems.forEach((deletedItem) {
-      actionItemService.deleteActionItem(deletedItem);
-    });
-    note.actionItems.forEach((actionItem) {
-      actionItem.parent = note.id;
-      actionItemService.addActionItem(actionItem);
-    });
-    setState(ViewState.Idle);
+  Future reloadNotes() async {
+    notes = await _repo.getNotes();
+    _noteSink.add(notes);
   }
 
-  removeNote(note) async {
-    setState(ViewState.Busy);
-    Database db = await dbProvider.db;
-    await db.delete("Note", where: 'id = ?', whereArgs: [note.id]);
-    setState(ViewState.Idle);
-    loadNotes();
+  void deleteNote(Note note) {
+    notes.removeWhere((n) => n.id == note.id);
+    _repo.deleteNote(note.id);
+    _noteSink.add(notes);
+  }
+
+  void createNote(Note note) {
+    notes.add(note);
+    _repo.addNote(note);
+    _noteSink.add(notes);
+  }
+
+  dispose() {
+    _controller.close();
+  }
+
+  void updateNote(Note note) {
+    notes.removeWhere((n) => n.id == note.id);
+    notes.add(note);
+    _repo.updateNote(note);
   }
 }

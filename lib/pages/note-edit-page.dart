@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:past_me/Events/note_event.dart';
 import 'package:past_me/models/note.dart';
 import 'package:past_me/models/action_item.dart';
 import 'package:past_me/services/note_service.dart';
@@ -89,7 +90,7 @@ class _NoteEditPageState extends State<NoteEditPage> {
             color: theme.colorScheme.secondary,
             shape: CircleBorder(),
             onPressed: () {
-              locator<NoteService>().removeNote(note);
+              locator<NoteService>().processEvent(NoteDeletedEvent(note));
               Navigator.of(context).pop();
             },
           );
@@ -225,7 +226,9 @@ class _NoteEditPageState extends State<NoteEditPage> {
         child: Icon(Icons.save),
         onPressed: () {
           if (_formKey.currentState.validate()) {
-            locator<NoteService>().addNote(note);
+            note.id != null
+              ? locator<NoteService>().processEvent(NoteUpdatedEvent(note))
+              : locator<NoteService>().processEvent(NoteCreatedEvent(note));
             Navigator.pop(context);
           }
         });

@@ -2,13 +2,12 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
-import 'package:past_me/services/base_service.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
 
-class DBProvider extends BaseService {
+class DBProvider {
   Database _db;
 
   Future<Database> get db async {
