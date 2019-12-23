@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:past_me/locator.dart';
-import 'package:past_me/pages/note-edit-page.dart';
+import 'package:past_me/pages/note-edit-page/note-edit-page.dart';
+import 'package:past_me/pages/note-list-page/note-list-page.dart';
 
 import 'models/note.dart';
-import 'pages/note-list-page.dart';
 
 main() {
   setupLocator();

@@ -25,12 +25,13 @@ class NoteSqlRepository implements NoteRepository {
     Database db = await dbProvider.db;
     var result = await db.query("Note", where: 'id = ?', whereArgs: [id], limit: 1);
     if(getNote(id) != null) {
+      await db.delete("ActionItem", where: "parent = ?", whereArgs: [id]);
       await db.delete("Note", where: 'id = ?', whereArgs: [id]);
-      return Note.fromMap(result[0]);
     } else {
       throw new ArgumentError("The id: $id was not found in the database");
     }
 
+    return Note.fromMap(result[0]);
   }
 
   @override

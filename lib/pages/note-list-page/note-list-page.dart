@@ -2,12 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:past_me/Events/note_event.dart';
+import 'package:past_me/components/preview-card.dart';
 import 'package:past_me/locator.dart';
 import 'package:past_me/models/note.dart';
+import 'package:past_me/pages/note-edit-page/note-edit-page.dart';
 import 'package:past_me/services/note_service.dart';
-
-import '../components/preview-card.dart';
-import 'note-edit-page.dart';
 
 class NoteListPage extends StatefulWidget {
   @override
@@ -18,8 +17,13 @@ class _NoteListPageState extends State<NoteListPage> {
   final NoteService noteService = locator<NoteService>();
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
     noteService.processEvent(NoteListChanged());
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return StreamBuilder<List<Note>>(
       stream: noteService.stream,
       builder: (context, snapshot) => snapshot.hasData
@@ -36,7 +40,7 @@ class _NoteListPageState extends State<NoteListPage> {
         children: getCards(context, notes),
       ),
       floatingActionButton: FloatingActionButton(
-          onPressed: () => Navigator.of(context).pushNamed('/new'),
+          onPressed: () => editNote(context, Note()),
           child: Icon(Icons.add)),
     );
   }
@@ -52,7 +56,7 @@ class _NoteListPageState extends State<NoteListPage> {
 
   void editNote(BuildContext context, Note note) {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => NoteEditPage(note)));
+        context, MaterialPageRoute(builder: (_) => NoteEditPage(note)));
   }
 
   @override

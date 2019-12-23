@@ -13,6 +13,15 @@ class NoteActionItem {
         this.description,
     });
 
+    factory NoteActionItem.from(NoteActionItem other) {
+      return NoteActionItem(
+        id: other.id,
+        parent: other.parent,
+        done: other.done,
+        description: other.description
+      );
+    }
+
     factory NoteActionItem.fromJson(String str) => NoteActionItem.fromMap(json.decode(str));
 
     String toJson() => json.encode(toMap());
