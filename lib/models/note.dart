@@ -7,7 +7,7 @@ class Note {
   String body = "";
   List<NoteActionItem> actionItems = [];
 
-  Note({id, body, actionItems}) {
+  Note({int id, String body, List<NoteActionItem> actionItems}) {
     this.id = id;
     this.body = body ?? "";
     this.actionItems = actionItems ?? [];
@@ -18,6 +18,10 @@ class Note {
   @override
   String toString() {
     return "{ id: $id, body: $body, actionItems: [${_getActionItemsString()}] }";
+  }
+
+  bool operator == (other) {
+    return other is Note && other.toJson() == this.toJson();
   }
 
   static Note from(Note other) {

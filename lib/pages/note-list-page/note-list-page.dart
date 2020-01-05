@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:past_me/Events/note_event.dart';
+import 'package:past_me/components/circle-raised-button.dart';
 import 'package:past_me/components/preview-card.dart';
+import 'package:past_me/components/speed-dial.dart';
 import 'package:past_me/locator.dart';
 import 'package:past_me/models/note.dart';
 import 'package:past_me/pages/note-edit-page/note-edit-page.dart';
@@ -39,9 +41,10 @@ class _NoteListPageState extends State<NoteListPage> {
         scrollDirection: Axis.vertical,
         children: getCards(context, notes),
       ),
-      floatingActionButton: FloatingActionButton(
-          onPressed: () => editNote(context, Note()),
-          child: Icon(Icons.add)),
+      floatingActionButton: CircleRaisedButton(
+        child: Icon(Icons.add),
+        onPressed: () => editNote(context, Note()),
+      ),
     );
   }
 

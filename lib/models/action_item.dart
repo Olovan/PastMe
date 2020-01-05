@@ -24,6 +24,17 @@ class NoteActionItem {
 
     factory NoteActionItem.fromJson(String str) => NoteActionItem.fromMap(json.decode(str));
 
+    bool operator == (other) {
+      return this.id == other.id &&
+        this.parent == other.parent &&
+        this.done == other.done &&
+        this.description == other.description;
+    }
+
+    String toString() {
+      return toJson();
+    }
+
     String toJson() => json.encode(toMap());
 
     factory NoteActionItem.fromMap(Map<String, dynamic> json) => NoteActionItem(

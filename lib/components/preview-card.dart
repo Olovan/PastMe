@@ -23,13 +23,16 @@ class PreviewCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return buildStyledCard(
         context: context,
-        child: buildCardContent(
-          context: context, 
-          children: <Widget>[
-            buildCardText(Theme.of(context).accentTextTheme),
-            Container(height: 10),
-            buildCardActionItemSummary(Theme.of(context))
-    ]));
+        child: addEditButton(
+            context: context,
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  buildCardText(Theme.of(context).accentTextTheme),
+                  Container(height: 10),
+                  buildCardActionItemSummary(Theme.of(context))
+                ])));
   }
 
   Widget buildStyledCard({child, context}) {
@@ -50,21 +53,18 @@ class PreviewCard extends StatelessWidget {
         ));
   }
 
-  Widget buildCardContent({context, children}) {
+  Widget addEditButton({context, child}) {
     var theme = Theme.of(context);
     return Row(
       children: <Widget>[
-        Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: children),
-        Spacer(),
+        Expanded(child: child),
         GestureDetector(
           onTap: tapAction,
           child: Container(
             padding: EdgeInsets.only(left: 10, right: 10),
-            decoration:
-                BoxDecoration(border: Border(left: BorderSide(width: 1, color: theme.primaryColor))),
+            decoration: BoxDecoration(
+                border: Border(
+                    left: BorderSide(width: 1, color: theme.primaryColor))),
             child: Icon(Icons.edit, color: theme.primaryColor),
           ),
         )
@@ -82,18 +82,18 @@ class PreviewCard extends StatelessWidget {
             width: 10,
           ),
           Text(
-              "${note.actionItems.where((i) => i.done).toList().length} / ${note.actionItems.length}", style: theme.accentTextTheme.body1,),
+            "${note.actionItems.where((i) => i.done).toList().length} / ${note.actionItems.length}",
+            style: theme.accentTextTheme.body1,
+          ),
         ],
       ),
     );
   }
 
   buildCardText(TextTheme textTheme) {
-    return Center(
-      child: Text(
-        note.body,
-        style: textTheme.body1,
-      ),
+    return Text(
+      note.body,
+      style: textTheme.body1,
     );
   }
 

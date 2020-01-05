@@ -20,8 +20,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-  get_it:
-  sqflite:
+  get_it: ^3.0.1
+  sqflite: ^1.1.7
   path_provider:
   path:
 
@@ -32,6 +32,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  test:
+  mockito: ^4.1.1
 
 
 # For information on the generic Dart part of this file, see the
