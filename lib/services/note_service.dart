@@ -27,18 +27,21 @@ class NoteService {
 
   Future reloadNotes() async {
     notes = await _repo.getNotes();
+    notes.sort((a, b) => a.id - b.id);
     _noteSink.add(notes);
   }
 
   Future deleteNote(Note note) async {
     notes.removeWhere((n) => n.id == note.id);
     await _repo.deleteNote(note.id);
+    notes.sort((a, b) => a.id - b.id);
     _noteSink.add(notes);
   }
 
   Future createNote(Note note) async {
     notes.add(note);
     await _repo.addNote(note);
+    notes.sort((a, b) => a.id - b.id);
     _noteSink.add(notes);
   }
 
@@ -50,6 +53,7 @@ class NoteService {
     notes.removeWhere((n) => n.id == note.id);
     notes.add(note);
     await _repo.updateNote(note);
+    notes.sort((a, b) => a.id - b.id);
     _noteSink.add(notes);
   }
 
