@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:past_me/Events/note_event.dart';
 import 'package:past_me/components/circle-raised-button.dart';
+import 'package:past_me/components/confirmation-dialog.dart';
 import 'package:past_me/components/speed-dial.dart';
 import 'package:past_me/locator.dart';
 import 'package:past_me/models/note.dart';
@@ -10,11 +11,16 @@ import 'package:past_me/pages/note-edit-page/action-item-input.dart';
 import 'package:past_me/services/note_service.dart';
 
 class NoteEditPage extends StatefulWidget {
-  Note note;
+  final Note note;
 
-  NoteEditPage(Note target) {
-    note = Note.from(target);
+  NoteEditPage._(this.note); // Private constructor
+
+  // Public factory constructor. This allows us to modify the
+  // passed in Note parameter before it becomes immutable.
+  factory NoteEditPage(Note target) {
+    Note note = Note.from(target);
     note.actionItems = note.actionItems ?? [];
+    return NoteEditPage._(note);
   }
 
   @override
@@ -32,7 +38,7 @@ class _NoteEditPageState extends State<NoteEditPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SpeedDial(
-            expandedChildren: buildSpeedDial(),
+            expandedChildren: getSpeedDialEntries(),
             child: SafeArea(
               child: Form(
                 key: _formKey,
@@ -120,7 +126,7 @@ class _NoteEditPageState extends State<NoteEditPage> {
     );
   }
 
-  List<Widget> buildSpeedDial() {
+  List<Widget> getSpeedDialEntries() {
     if (widget.note.id != null)
       return [
         buildBackButton(),
@@ -156,10 +162,15 @@ class _NoteEditPageState extends State<NoteEditPage> {
           )
         : CircleRaisedButton(
             child: Icon(Icons.delete),
-            onPressed: () {
-              locator<NoteService>()
-                  .processEvent(NoteDeletedEvent(widget.note));
-              Navigator.of(context).pop();
+            onPressed: () async {
+              bool confirmDelete = await ConfirmationDialog.show(context,
+                  title: "Confirm Deletion",
+                  body: "Are you sure you want to delete this note?");
+              if (confirmDelete) {
+                locator<NoteService>()
+                    .processEvent(NoteDeletedEvent(widget.note));
+                Navigator.of(context).pop();
+              }
             },
           );
   }

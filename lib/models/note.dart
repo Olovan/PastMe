@@ -24,6 +24,8 @@ class Note {
     return other is Note && other.toJson() == this.toJson();
   }
 
+  int get hashCode => id.hashCode ^ body.hashCode ^ actionItems.fold(0, (total, current) => total ^ current.hashCode);
+
   static Note from(Note other) {
     List<NoteActionItem> items = other.actionItems
       .map((i) => NoteActionItem.from(i))

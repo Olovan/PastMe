@@ -30,13 +30,13 @@ class NoteService {
     _noteSink.add(notes);
   }
 
-  void deleteNote(Note note) async {
+  Future deleteNote(Note note) async {
     notes.removeWhere((n) => n.id == note.id);
     await _repo.deleteNote(note.id);
     _noteSink.add(notes);
   }
 
-  void createNote(Note note) async {
+  Future createNote(Note note) async {
     notes.add(note);
     await _repo.addNote(note);
     _noteSink.add(notes);
@@ -46,7 +46,7 @@ class NoteService {
     _controller.close();
   }
 
-  void updateNote(Note note) async {
+  Future updateNote(Note note) async {
     notes.removeWhere((n) => n.id == note.id);
     notes.add(note);
     await _repo.updateNote(note);

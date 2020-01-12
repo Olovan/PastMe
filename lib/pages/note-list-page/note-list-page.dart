@@ -4,7 +4,6 @@ import 'package:flutter/rendering.dart';
 import 'package:past_me/Events/note_event.dart';
 import 'package:past_me/components/circle-raised-button.dart';
 import 'package:past_me/components/preview-card.dart';
-import 'package:past_me/components/speed-dial.dart';
 import 'package:past_me/locator.dart';
 import 'package:past_me/models/note.dart';
 import 'package:past_me/pages/note-edit-page/note-edit-page.dart';

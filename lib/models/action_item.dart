@@ -25,11 +25,14 @@ class NoteActionItem {
     factory NoteActionItem.fromJson(String str) => NoteActionItem.fromMap(json.decode(str));
 
     bool operator == (other) {
-      return this.id == other.id &&
+      return other is NoteActionItem &&
+        this.id == other.id &&
         this.parent == other.parent &&
         this.done == other.done &&
         this.description == other.description;
     }
+
+    int get hashCode => this.id.hashCode ^ this.parent.hashCode ^ this.done.hashCode ^ this.description.hashCode;
 
     String toString() {
       return toJson();
