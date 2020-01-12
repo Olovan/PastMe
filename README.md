@@ -4,4 +4,4 @@ A simple note-taking app built with the Flutter framework.
 
 |List View|Edit View|
 |-|-|
-|![Screenshot from 2020-01-12 18-14-31](https://user-images.githubusercontent.com/13972236/72227264-6ffddb00-3568-11ea-89f0-c7f7a8cdf17e.png) | ![Screenshot from 2020-01-12 18-16-44](https://user-images.githubusercontent.com/13972236/72227271-85730500-3568-11ea-93e4-bf6157f615e6.png)|
+|![Screenshot_1578871934](https://user-images.githubusercontent.com/13972236/72227394-0f6f9d80-356a-11ea-8457-4f972738a3b1.png) | ![Screenshot_1578871951](https://user-images.githubusercontent.com/13972236/72227395-126a8e00-356a-11ea-89c5-417c392f462b.png)|
