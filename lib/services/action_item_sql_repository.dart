@@ -1,9 +1,9 @@
 import 'package:past_me/models/action_item.dart';
 import 'package:past_me/models/note.dart';
-import 'package:past_me/services/action_item_repository.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../locator.dart';
+import 'interfaces/action_item_repository.dart';
 
 class ActionItemSqlRepository implements ActionItemRepository {
   Future<Database> futureDb = locator<Future<Database>>();

@@ -2,9 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
-import 'package:past_me/Events/note_event.dart';
+import 'package:past_me/models/Events/note_event.dart';
 import 'package:past_me/models/note.dart';
-import 'package:past_me/services/note_repository.dart';
+import 'package:past_me/services/interfaces/note_repository.dart';
 import 'package:past_me/services/note_service.dart';
 
 class FakeNoteRepository extends Mock implements NoteRepository {}

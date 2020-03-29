@@ -17,6 +17,7 @@ class App extends StatelessWidget {
     ThemeData theme = buildTheme();
     return MaterialApp(
       title: 'Past Me',
+      debugShowCheckedModeBanner: false,
       home: NoteListPage(),
       theme: theme,
       routes: {
@@ -29,19 +30,9 @@ class App extends StatelessWidget {
   ThemeData buildTheme() {
     ThemeData base = ThemeData.light();
     return base.copyWith(
+      primaryColor: Color(0xFFC2185B),
       backgroundColor: Color(0xFFF9F9F9),
-      primaryColor: Color(0xFFFAFAFA),
-      primaryColorLight: Color(0xFFFFFFFF),
-      primaryColorDark: Color(0xC7C7C7C7),
       accentColor: Color(0xFFC2185B),
-      colorScheme: base.colorScheme.copyWith(
-        primary: Color(0xFFFAFAFA),
-        primaryVariant: Color(0xFFFFFFFF),
-        onPrimary: Color(0xFF000000),
-        secondary: Color(0xFFC2185B),
-        secondaryVariant: Color(0xFF8C0032),
-        onSecondary: Color(0xFFFFFFFF)
-      )
     );
   }
 }

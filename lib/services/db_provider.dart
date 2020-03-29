@@ -15,7 +15,7 @@ class DBProvider {
     Directory appBaseDirectory = await getApplicationDocumentsDirectory();
     String dbFilePath = join(appBaseDirectory.path, "PastMe.db");
     return await openDatabase(dbFilePath,
-        version: 2,
+        version: 3,
         onCreate: databaseFirstTimeSetup,
         onUpgrade: databaseUpgrade);
   }
@@ -36,6 +36,7 @@ CREATE TABLE ActionItem
     id INTEGER PRIMARY KEY,
     description TEXT,
     done BOOLEAN,
+    dueDate DATETIME,
     parent INTEGER REFERENCES Note(id) ON DELETE CASCADE 
 )
     ''';
@@ -45,7 +46,8 @@ CREATE TABLE ActionItem
   }
 
   FutureOr<void> databaseUpgrade(Database db, int oldVersion, int newVersion) async {
-    await db.execute("DROP TABLE Note; DROP TABLE ActionItem;"); // Just drop them for now
+    await db.execute("DROP TABLE Note;"); // Just drop them for now
+    await db.execute("DROP TABLE ActionItem;"); // Just drop them for now
     String setupScript =
         await rootBundle.loadString("assets/sql/setup.sql");
 

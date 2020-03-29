@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
 import 'package:past_me/models/note.dart';
-import 'package:past_me/services/action_item_repository.dart';
+import 'package:past_me/services/interfaces/action_item_repository.dart';
 import 'package:past_me/services/note_sql_repository.dart';
 import 'package:sqflite/sqflite.dart';
 

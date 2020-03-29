@@ -16,7 +16,7 @@ class CircleRaisedButton extends StatelessWidget {
       child: RaisedButton(
         shape: CircleBorder(),
         elevation: 6, // Same elevation as FloatingActionButton default
-        color: Theme.of(context).colorScheme.secondary,
+        color: Theme.of(context).accentColor,
         textColor: Theme.of(context).colorScheme.onSecondary,
         child: child,
         padding: EdgeInsets.all(padding),

@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:past_me/Events/note_event.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:past_me/components/circle-raised-button.dart';
 import 'package:past_me/components/confirmation-dialog.dart';
 import 'package:past_me/components/speed-dial.dart';
 import 'package:past_me/locator.dart';
+import 'package:past_me/models/Events/note_event.dart';
 import 'package:past_me/models/note.dart';
 import 'package:past_me/models/action_item.dart';
 import 'package:past_me/pages/note-edit-page/action-item-input.dart';
@@ -76,7 +77,7 @@ class _NoteEditPageState extends State<NoteEditPage> {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       decoration: BoxDecoration(
-          color: theme.colorScheme.primary,
+          color: theme.backgroundColor,
           borderRadius: BorderRadius.circular(10)),
       child: TextFormField(
           validator: notNullOrEmptyValidator,
@@ -85,13 +86,13 @@ class _NoteEditPageState extends State<NoteEditPage> {
                   OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  borderSide: BorderSide(color: theme.colorScheme.secondary)),
+                  borderSide: BorderSide(color: theme.accentColor)),
               hintText: "Body",
               contentPadding: EdgeInsets.all(10)),
           initialValue: widget.note.body,
           onChanged: (text) => widget.note.body = text,
           keyboardType: TextInputType.multiline,
-          maxLines: 5),
+          maxLines: 3),
     );
   }
 
@@ -110,20 +111,65 @@ class _NoteEditPageState extends State<NoteEditPage> {
     var actionItem = widget.note.actionItems[i];
     return Dismissible(
       child: ListTile(
-          leading: Checkbox(
-            value: actionItem.done,
-            onChanged: (bool value) {
-              widget.note.actionItems[i].done = value;
-              setState(() {});
-            },
-          ),
-          title: Text("${widget.note.actionItems[i].description}")),
+        leading: Checkbox(
+          value: actionItem.done,
+          onChanged: (bool value) {
+            actionItem.done = value;
+            setState(() {});
+          },
+        ),
+        title: Text("${widget.note.actionItems[i].description}"),
+        trailing: actionItem.dueDate != null ? 
+          dueDateDisplay(actionItem) :
+          createDueDateButton(context, actionItem),
+      ),
       key: Key(actionItem.id.toString()),
       onDismissed: (direction) {
         widget.note.actionItems.remove(actionItem);
       },
       background: Container(color: Colors.red, child: Icon(Icons.delete)),
     );
+  }
+
+  Widget dueDateDisplay(NoteActionItem actionItem) { 
+    return Wrap(
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: <Widget>[
+        Text(Jiffy(actionItem.dueDate).fromNow()),
+        IconButton(
+          onPressed: () async {
+            DateTime dueDate = await showDateTimePicker(context);
+            setState(() {
+              actionItem.dueDate = dueDate;
+            });
+          }, 
+          icon: Icon(Icons.edit), 
+        )
+      ]);
+  }
+
+  Widget createDueDateButton(context, NoteActionItem actionItem) {
+    return IconButton(
+          icon: Icon(Icons.alarm), 
+          onPressed: () async { 
+            DateTime dueDate = await showDateTimePicker(context);
+            actionItem.dueDate = dueDate; 
+            setState((){});
+          });
+  }
+
+  Future<DateTime> showDateTimePicker(context) async {
+    DateTime date;
+    TimeOfDay time;
+    date = await showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime.now().subtract(Duration(days: 365)), lastDate: DateTime.now().add(Duration(days: 365 * 10)));
+    if(date != null)
+      time = await showTimePicker(context: context, initialTime: TimeOfDay.now());
+    if(date != null && time != null) {
+      DateTime dueDate = DateTime(date.year, date.month, date.day, time.hour, time.minute);
+      return dueDate;
+    } else {
+      return null;
+    }
   }
 
   List<Widget> getSpeedDialEntries() {

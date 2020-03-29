@@ -1,8 +1,8 @@
 
 import 'package:get_it/get_it.dart';
-import 'package:past_me/services/action_item_repository.dart';
 import 'package:past_me/services/action_item_sql_repository.dart';
-import 'package:past_me/services/note_repository.dart';
+import 'package:past_me/services/interfaces/action_item_repository.dart';
+import 'package:past_me/services/interfaces/note_repository.dart';
 import 'package:past_me/services/note_service.dart';
 import 'package:past_me/services/note_sql_repository.dart';
 import 'package:sqflite/sqflite.dart';

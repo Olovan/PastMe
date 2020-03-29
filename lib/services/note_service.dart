@@ -2,9 +2,10 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:past_me/locator.dart';
-import 'package:past_me/Events/note_event.dart';
+import 'package:past_me/models/Events/note_event.dart';
 import 'package:past_me/models/note.dart';
-import 'package:past_me/services/note_repository.dart';
+import 'package:past_me/services/interfaces/note_repository.dart';
+
 
 class NoteService {
   NoteRepository _repo = locator<NoteRepository>();

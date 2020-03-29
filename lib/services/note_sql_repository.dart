@@ -1,7 +1,7 @@
 import 'package:past_me/models/action_item.dart';
 import 'package:past_me/models/note.dart';
-import 'package:past_me/services/action_item_repository.dart';
-import 'package:past_me/services/note_repository.dart';
+import 'package:past_me/services/interfaces/action_item_repository.dart';
+import 'package:past_me/services/interfaces/note_repository.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../locator.dart';

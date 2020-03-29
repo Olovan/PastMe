@@ -48,8 +48,8 @@ class _ActionItemInputState extends State<ActionItemInput> {
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(color: theme.colorScheme.secondary)),
-            fillColor: theme.colorScheme.primary,
+                borderSide: BorderSide(color: theme.accentColor)),
+            fillColor: theme.backgroundColor,
             filled: true,
             suffixIcon: addNewActionItemButton(context),
           ),
@@ -66,7 +66,7 @@ class _ActionItemInputState extends State<ActionItemInput> {
     return GestureDetector(
       child: Icon(
         Icons.add_circle,
-        color: theme.colorScheme.secondary,
+        color: theme.accentColor,
       ),
       onTap: addActionItem,
     );

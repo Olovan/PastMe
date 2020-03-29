@@ -43,7 +43,7 @@ class PreviewCard extends StatelessWidget {
           padding: EdgeInsets.all(10),
           margin: EdgeInsets.all(5),
           decoration: BoxDecoration(
-            color: theme.colorScheme.secondary,
+            color: theme.accentColor,
             borderRadius: BorderRadius.circular(5),
             boxShadow: [
               BoxShadow(blurRadius: 5, offset: Offset(0, 1), spreadRadius: (-2))
@@ -64,8 +64,8 @@ class PreviewCard extends StatelessWidget {
             padding: EdgeInsets.only(left: 10, right: 10),
             decoration: BoxDecoration(
                 border: Border(
-                    left: BorderSide(width: 1, color: theme.primaryColor))),
-            child: Icon(Icons.edit, color: theme.primaryColor),
+                    left: BorderSide(width: 1, color: theme.backgroundColor))),
+            child: Icon(Icons.edit, color: theme.backgroundColor),
           ),
         )
       ],
@@ -77,7 +77,7 @@ class PreviewCard extends StatelessWidget {
       margin: EdgeInsets.only(left: 5),
       child: Row(
         children: <Widget>[
-          Icon(Icons.check_circle, color: theme.primaryColor),
+          Icon(Icons.check_circle, color: theme.backgroundColor),
           Container(
             width: 10,
           ),
