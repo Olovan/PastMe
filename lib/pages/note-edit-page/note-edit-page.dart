@@ -10,6 +10,7 @@ import 'package:past_me/models/note.dart';
 import 'package:past_me/models/action_item.dart';
 import 'package:past_me/pages/note-edit-page/action-item-input.dart';
 import 'package:past_me/services/note_service.dart';
+import 'package:past_me/services/notifications.dart';
 
 class NoteEditPage extends StatefulWidget {
   final Note note;
@@ -30,6 +31,7 @@ class NoteEditPage extends StatefulWidget {
 
 class _NoteEditPageState extends State<NoteEditPage> {
   String newActionItem = "";
+  NotificationSystem notificationSystem = locator<NotificationSystem>();
 
   _NoteEditPageState();
 
@@ -154,6 +156,7 @@ class _NoteEditPageState extends State<NoteEditPage> {
           onPressed: () async { 
             DateTime dueDate = await showDateTimePicker(context);
             actionItem.dueDate = dueDate; 
+            await notificationSystem.schedule(dueDate, actionItem.description);
             setState((){});
           });
   }

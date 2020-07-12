@@ -5,6 +5,7 @@ import 'package:past_me/services/interfaces/action_item_repository.dart';
 import 'package:past_me/services/interfaces/note_repository.dart';
 import 'package:past_me/services/note_service.dart';
 import 'package:past_me/services/note_sql_repository.dart';
+import 'package:past_me/services/notifications.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'services/db_provider.dart';
@@ -17,4 +18,5 @@ void setupLocator() {
   locator.registerLazySingleton<ActionItemRepository>(() => ActionItemSqlRepository());
   locator.registerLazySingleton<NoteService>(() => NoteService());
   locator.registerLazySingleton<Future<Database>>(() => DBProvider().db);
+  locator.registerLazySingleton<NotificationSystem>(() => NotificationSystem());
 }
